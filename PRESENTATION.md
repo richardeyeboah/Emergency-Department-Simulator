@@ -23,7 +23,7 @@ For each admission, select the indicated ID in the waiting table, click **Admit 
 6. **Discharge non-critical patients:** Click rooms 4, 6, and 8 and confirm each discharge. Say: “I simulate the doctor's decision to discharge these non-critical patients. Severity alone does not automatically discharge anyone.”
 7. **Updated statuses:** Click **Display room statuses** again and point to empty rooms 4, 6, and 8. Expected: occupied 7, available 3, waiting 2, discharged 3.
 8. **Doctor-advised discharge:** Discharge rooms 1 and 3. Say: “After treatment, I simulate the doctor's advice by discharging these patients.” Expected: occupied 5, available 5, discharged 5.
-9. **Empty-room discharge:** Click room 6. It reports that the room is available and changes nothing. Show Test 9 in AssignmentTests for the explicit backend rejection of dischargePatient(6).
+9. **Empty-room discharge:** Click room 6. The discharge attempt is rejected with “Room 6 has no patient. Cannot discharge.” Dismiss the warning and show that counts remain unchanged.
 10. **Final queue and occupancy:** Click Peek next: P011 is next because severity 1 outranks P012's severity 2. Search P006: Lisa Anderson is in treatment in room 10. Expected: registered 12, waiting 2, occupied 5, available 5, discharged 5. Open history to show newest discharge first.
 
 ## Explain the code briefly

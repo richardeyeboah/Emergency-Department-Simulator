@@ -56,7 +56,7 @@ public final class EmergencyDepartment {
     }
     public synchronized Patient dischargePatient(int roomNumber) {
         Room room = room(roomNumber);
-        if (!room.isOccupied()) throw new IllegalStateException("Room is already empty.");
+        if (!room.isOccupied()) throw new IllegalStateException("Room " + roomNumber + " has no patient. Cannot discharge.");
         LocalDateTime time = now();
         Patient p = room.release(); p.discharge(time); dischargeHistory.push(p); return p;
     }
