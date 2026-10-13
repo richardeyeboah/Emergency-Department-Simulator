@@ -16,12 +16,12 @@ Import appends rather than replacing patients. To repeat the presentation, click
 For each admission, select the indicated ID in the waiting table, click **Admit selected**, and enter the room number. Use manual admission for this numbered demonstration; Call next follows severity automatically and would produce different room assignments.
 
 1. **Admit patients:** P001 → room 1, P003 → room 3, P006 → room 10. Say: “Each admission removes that patient from the waiting queue and assigns one room.” Expected: 3 occupied, 9 waiting.
-2. **Display room statuses:** Point to all ten room cards and statistics. Say: “Rooms 1, 3, and 10 are occupied; seven rooms are free.”
+2. **Display room statuses:** Click **Display room statuses** to open the current room list. Say: “Rooms 1, 3, and 10 are occupied; seven rooms are free.”
 3. **Occupied room:** Select P002 and attempt room 1. Dismiss the warning. Say: “It rejects this admission, and P002 remains waiting.” Expected: unchanged.
 4. **Fill rooms:** Admit P002 → 2, P005 → 4, P004 → 5, P008 → 6, P007 → 7, P009 → 8, P010 → 9. Expected: occupied 10, waiting 2, available 0. Click Call / get next to show full-capacity rejection.
 5. **Null patient:** Click **Test null admission** and dismiss the warning “Patient is required.” Say: “This button attempts to admit null, meaning no patient object. The app rejects it, and the queue and rooms stay unchanged.” It attempts the first available room, or room 1 when all rooms are full; null validation happens before occupancy validation.
 6. **Discharge non-critical patients:** Click rooms 4, 6, and 8 and confirm each discharge. Say: “I simulate the doctor's decision to discharge these non-critical patients. Severity alone does not automatically discharge anyone.”
-7. **Updated statuses:** Point to empty rooms 4, 6, and 8. Expected: occupied 7, available 3, waiting 2, discharged 3.
+7. **Updated statuses:** Click **Display room statuses** again and point to empty rooms 4, 6, and 8. Expected: occupied 7, available 3, waiting 2, discharged 3.
 8. **Doctor-advised discharge:** Discharge rooms 1 and 3. Say: “After treatment, I simulate the doctor's advice by discharging these patients.” Expected: occupied 5, available 5, discharged 5.
 9. **Empty-room discharge:** Click room 6. It reports that the room is available and changes nothing. Show Test 9 in AssignmentTests for the explicit backend rejection of dischargePatient(6).
 10. **Final queue and occupancy:** Click Peek next: P011 is next because severity 1 outranks P012's severity 2. Search P006: Lisa Anderson is in treatment in room 10. Expected: registered 12, waiting 2, occupied 5, available 5, discharged 5. Open history to show newest discharge first.

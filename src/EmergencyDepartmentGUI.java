@@ -36,7 +36,26 @@ public final class EmergencyDepartmentGUI extends JFrame {
         JPanel flow = new JPanel(new BorderLayout(12,12)); flow.setOpaque(false); center.add(flow);
         styleTable(queue,true); styleTable(history,false);
         JTabbedPane tabs = new JTabbedPane(); tabs.addTab("Waiting queue · priority order",new JScrollPane(queue)); tabs.addTab("Discharge history · newest first",new JScrollPane(history));
-        JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT)); actions.setOpaque(false);
+        JPanel actions = new JPanel(new GridLayout(2,3,8,6)); actions.setOpaque(false);
+        actions.add(button("Display room statuses", () -> {
+            DefaultTableModel statuses = model("Room", "Status", "Patient ID", "Patient", "Triage", "Treatment");
+            for (Room room : ed.rooms()) {
+                Patient p = room.getPatient();
+                statuses.addRow(new Object[]{room.getNumber(), p == null ? "Available" : "Occupied",
+                        p == null ? "—" : p.getId(), p == null ? "—" : p.getName(),
+                        p == null ? "—" : LEVELS[p.getSeverity()-1],
+                        p == null ? "—" : duration(p.treatmentDuration(ed.now()))});
+            }
+            JTable table = new JTable(statuses); table.setRowHeight(30);
+            table.setFillsViewportHeight(true);
+            JScrollPane scroll = new JScrollPane(table); scroll.setPreferredSize(new Dimension(760,330));
+            JPanel report = new JPanel(new BorderLayout(0,12));
+            report.add(new JLabel("Occupied: " + ed.occupiedCount() + " / 10     Available: " + ed.availableCount()
+                    + "     Waiting: " + ed.waitingCount()), BorderLayout.NORTH);
+            report.add(scroll, BorderLayout.CENTER);
+            JOptionPane.showMessageDialog(this, report, "Current room statuses", JOptionPane.PLAIN_MESSAGE);
+            return "Room statuses displayed.";
+        }));
         actions.add(button("Peek next", () -> { Patient p = ed.peekNextPatient(); if(p == null) return "Waiting queue is empty."; showPatient(p); return "Next: " + p; }));
         actions.add(button("Call / get next → admit", () -> { Patient p = ed.getNextPatient(); return p == null ? "Waiting queue is empty." : "Admitted: " + p; }));
         actions.add(button("Admit selected", () -> { Patient p = selected(); String value = JOptionPane.showInputDialog(this,"Room number (1–10)"); if(value == null) return "Admission cancelled."; ed.admitPatient(Integer.parseInt(value.trim()),p); return "Admitted to room " + value; }));

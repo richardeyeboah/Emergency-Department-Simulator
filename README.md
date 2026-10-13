@@ -25,6 +25,7 @@ Manual compilation on other systems:
 ## Controls
 
 - Test null admission: attempts admission with Java null and displays the validation error without changing state.
+- Display room statuses: opens a current snapshot of all ten rooms, occupants, triage, treatment durations, and occupancy counts. Use it for Tests 2 and 7.
 - Register patient: records arrival and adds a uniquely identified patient.
 - Peek next: shows the next patient without removing them.
 - Call / get next → admit: admits the highest-priority waiting patient into the first free room. Full capacity leaves the queue unchanged.
