@@ -7,6 +7,8 @@ public final class Patient {
     private final int severity;
     private LocalDateTime arrivalTime, admissionTime, dischargeTime;
     private long arrivalSequence = -1;
+    /** Assignment-compatible constructor; unspecified triage defaults to urgent (3). */
+    public Patient(String id, String name, String condition) { this(id, name, condition, 3); }
     public Patient(String id, String name, String condition, int severity) {
         this.id = required(id, "ID"); this.name = required(name, "Name");
         this.condition = required(condition, "Condition");

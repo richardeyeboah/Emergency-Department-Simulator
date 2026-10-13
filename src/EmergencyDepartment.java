@@ -20,6 +20,16 @@ public final class EmergencyDepartment {
         if (patients.containsKey(p.getId())) throw new IllegalArgumentException("ID already exists.");
         p.register(sequence++, now()); patients.put(p.getId(), p); waitingQueue.add(p);
     }
+    /** Validate the entire batch before registering anyone. Import appends to current data. */
+    public synchronized void importPatients(List<Patient> batch) {
+        if (batch == null || batch.isEmpty()) throw new IllegalArgumentException("Import contains no patients.");
+        HashSet<String> ids = new HashSet<>(patients.keySet());
+        for (Patient p : batch) {
+            if (p == null || p.getArrivalTime() != null) throw new IllegalArgumentException("Import requires new patients.");
+            if (!ids.add(p.getId())) throw new IllegalArgumentException("Duplicate ID: " + p.getId());
+        }
+        for (Patient p : batch) registerPatient(p);
+    }
     public synchronized Patient peekNextPatient() { return waitingQueue.peek(); }
     /** Get/call next admits to a free room, so no patient can disappear between queue and room. */
     public synchronized Patient getNextPatient() {
@@ -31,6 +41,10 @@ public final class EmergencyDepartment {
         Room room = room(roomNumber);
         if (p == null) throw new IllegalArgumentException("Patient is required.");
         if (room.isOccupied()) throw new IllegalStateException("Room is occupied. Patient remains waiting.");
+        if (p.getArrivalTime() == null) {
+            if (patients.containsKey(p.getId())) throw new IllegalArgumentException("ID already exists.");
+            registerPatient(p);
+        }
         if (patients.get(p.getId()) != p || !waitingQueue.contains(p))
             throw new IllegalArgumentException("Patient must be registered and waiting.");
         LocalDateTime time = now();

@@ -1,0 +1,13 @@
+id,name,condition,severity
+P001,John Smith,Critical injury,1
+P002,Sarah Wilson,Severe pain,2
+P003,Michael Johnson,Critical injury,1
+P004,Emily Davis,Minor cut,5
+P005,David Brown,Sprained ankle,5
+P006,Lisa Anderson,Flu,4
+P007,James Miller,Broken wrist,3
+P008,Emma Garcia,Mild fever,4
+P009,William Jones,Minor rash,5
+P010,Olivia Taylor,Abdominal pain,3
+P011,Noah Martin,Critical injury,1
+P012,Ava Thomas,Severe pain,2

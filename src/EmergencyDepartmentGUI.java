@@ -10,7 +10,7 @@ public final class EmergencyDepartmentGUI extends JFrame {
     private final Color background = new Color(239,244,250), ink = new Color(24,43,68);
     private static final Color[] COLORS = {new Color(255,210,212),new Color(255,225,185),new Color(255,244,172),new Color(199,226,255),new Color(201,240,216)};
     private static final String[] LEVELS = {"1 · Critical", "2 · Emergent", "3 · Urgent", "4 · Less urgent", "5 · Non-urgent"};
-    private final JLabel stats = new JLabel(), feedback = new JLabel("Ready. Register a patient or load the demo.");
+    private final JLabel stats = new JLabel(), feedback = new JLabel("Ready. Import patients or register a patient.");
     private final DefaultTableModel queueModel = model("ID","Patient","Condition","Triage","Arrival","Waiting");
     private final DefaultTableModel historyModel = model("ID","Patient","Triage","Arrival","Admitted","Discharged","Wait","Treatment");
     private final JTable queue = new JTable(queueModel), history = new JTable(historyModel);
@@ -31,7 +31,7 @@ public final class EmergencyDepartmentGUI extends JFrame {
         registration.add(new JLabel("Condition")); registration.add(condition); registration.add(new JLabel("Triage level")); registration.add(triage);
         registration.add(button("Register patient", () -> { ed.registerPatient(new Patient(id.getText(),name.getText(),condition.getText(),triage.getSelectedIndex()+1)); id.setText(""); name.setText(""); condition.setText(""); return "Patient registered."; }));
         registration.add(button("Search by ID", () -> { String value = JOptionPane.showInputDialog(this,"Patient ID"); if(value == null) return "Search cancelled."; Patient p = ed.searchPatient(value); if(p == null) return "No patient found."; showPatient(p); return "Patient found."; }));
-        registration.add(button("Load demo", () -> { if(ed.totalPatients() > 0 && JOptionPane.showConfirmDialog(this,"Replace current simulator data with fictional demo patients?","Load demo",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return "Demo cancelled."; ed = EmergencyDepartment.demo(); return "Fictional demo loaded."; }));
+        registration.add(button("Import patients", () -> { JFileChooser picker = new JFileChooser(new java.io.File("patients")); picker.setDialogTitle("Import patient CSV"); if(picker.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return "Import cancelled."; try { java.util.List<Patient> imported = PatientImporter.read(picker.getSelectedFile().toPath()); ed.importPatients(imported); return "Imported " + imported.size() + " patients into the waiting queue."; } catch(java.io.IOException ex) { throw new IllegalArgumentException("Could not read file: " + ex.getMessage()); } }));
         center.add(registration,BorderLayout.WEST);
         JPanel flow = new JPanel(new BorderLayout(12,12)); flow.setOpaque(false); center.add(flow);
         styleTable(queue,true); styleTable(history,false);
