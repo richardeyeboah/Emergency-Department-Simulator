@@ -27,6 +27,17 @@ public final class AssignmentTests {
         rejected(()->direct.admitPatient(10,new Patient("P099","New patient","Flu"))); check(direct.searchPatient("P099")==null);
         rejected(()->direct.importPatients(List.of(new Patient("NEW","New","Flu"),new Patient("P006","Duplicate","Flu")))); check(direct.searchPatient("NEW")==null && direct.totalPatients()==1);
         System.out.println("PASS: direct constructor/admission compatibility and atomic import rollback");
+        EmergencyDepartment timed=new EmergencyDepartment(java.time.Clock.fixed(java.time.Instant.parse("2026-10-13T12:00:00Z"),java.time.ZoneOffset.UTC));
+        timed.importPatients(PatientImporter.read(Path.of("patients/assignment-patients.csv")));
+        check(timed.searchPatient("P001").waitingDuration(timed.now()).toMinutes()==82);
+        check(timed.searchPatient("P012").waitingDuration(timed.now()).toMinutes()==4);
+        timed.registerPatient(new Patient("RECENT","Recent","Condition",1));
+        timed.importPatients(List.of(new Patient("OLDER","Older","Condition",1,90)));
+        check(timed.peekNextPatient().getId().equals("OLDER"));
+        timed.getNextPatient();
+        check(timed.searchPatient("OLDER").waitingDuration(timed.now()).toMinutes()==90);
+        rejected(()->new Patient("BAD","Bad","Condition",1,-1));
+        System.out.println("PASS: historical arrival offsets, chronological FIFO across imports, and frozen wait");
     }
     private static void statuses(EmergencyDepartment ed) {
         for(Room room:ed.rooms()) System.out.println("Room "+room.getNumber()+": "+(room.isOccupied()?room.getPatient():"Available"));

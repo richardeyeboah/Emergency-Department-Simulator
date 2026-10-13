@@ -10,7 +10,7 @@ Open this folder in Cursor, open Terminal → New Terminal, and run:
 
 Every launch starts empty. Click **Import patients** and choose **patients/assignment-patients.csv** to load twelve fictional patients into the waiting queue. Import validates the whole batch before changing data and appends to existing patients. Duplicate IDs reject the whole import.
 
-CSV format: id,name,condition,severity. Quoted fields and escaped quotes are supported; multiline fields are not. Severity must be 1–5.
+CSV format: id,name,condition,severity with optional arrived_minutes_ago. The presentation file has staggered historical arrivals (82 to 4 minutes before import), recalculated every time you import. Ordinary four-column files use the current arrival time. Quoted fields and escaped quotes are supported; multiline fields are not. Severity must be 1–5.
 
 To close, click the red window button or press Ctrl+C in the terminal that launched it. Run the same command to start fresh. Data is held in memory only.
 
@@ -35,7 +35,7 @@ Triage: 1 red critical, 2 orange emergent, 3 yellow urgent, 4 blue less urgent, 
 
 ## Code
 
-Patient holds identity, triage, arrival sequence and LocalDateTime timestamps. PatientComparator orders severity first, registration sequence second for FIFO ties.
+Patient holds identity, triage, arrival sequence and LocalDateTime timestamps. PatientComparator orders severity first, arrival time second, and registration sequence for exact timestamp ties.
 
 EmergencyDepartment uses PriorityQueue, HashMap, Room[10], and Stack. Validations prevent occupied room admissions, null patients, duplicate IDs, invalid rooms, and invalid discharges. Collection snapshots are read-only.
 

@@ -7,15 +7,17 @@ public final class PatientImporter {
     /** CSV with quoted fields (including escaped quotes), one patient per line. */
     public static List<Patient> read(Path path) throws IOException {
         List<String> lines = Files.readAllLines(path);
-        if (lines.isEmpty() || !lines.getFirst().replace("\uFEFF","").trim().equalsIgnoreCase("id,name,condition,severity"))
-            throw new IllegalArgumentException("Expected header: id,name,condition,severity");
+        String header = lines.isEmpty() ? "" : lines.getFirst().replace("\uFEFF","").trim();
+        boolean timed = header.equalsIgnoreCase("id,name,condition,severity,arrived_minutes_ago");
+        if (!timed && !header.equalsIgnoreCase("id,name,condition,severity"))
+            throw new IllegalArgumentException("Expected id,name,condition,severity with optional arrived_minutes_ago column.");
         List<Patient> patients = new ArrayList<>();
         for (int i=1;i<lines.size();i++) {
             if(lines.get(i).isBlank()) continue;
             try {
                 List<String> fields = fields(lines.get(i));
-                if(fields.size()!=4) throw new IllegalArgumentException("Expected four columns.");
-                patients.add(new Patient(fields.get(0),fields.get(1),fields.get(2),Integer.parseInt(fields.get(3).trim())));
+                if(fields.size()!=(timed ? 5 : 4)) throw new IllegalArgumentException("Column count does not match header.");
+                patients.add(new Patient(fields.get(0),fields.get(1),fields.get(2),Integer.parseInt(fields.get(3).trim()), timed ? Long.parseLong(fields.get(4).trim()) : 0));
             } catch(IllegalArgumentException ex) {
                 throw new IllegalArgumentException("Line "+(i+1)+": "+ex.getMessage());
             }

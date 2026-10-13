@@ -5,20 +5,26 @@ import java.util.Objects;
 public final class Patient {
     private final String id, name, condition;
     private final int severity;
+    private final long arrivedMinutesAgo;
     private LocalDateTime arrivalTime, admissionTime, dischargeTime;
     private long arrivalSequence = -1;
     /** Assignment-compatible constructor; unspecified triage defaults to urgent (3). */
     public Patient(String id, String name, String condition) { this(id, name, condition, 3); }
-    public Patient(String id, String name, String condition, int severity) {
+    public Patient(String id, String name, String condition, int severity) { this(id, name, condition, severity, 0); }
+    /** Historical arrival offset used only when importing fictional presentation patients. */
+    public Patient(String id, String name, String condition, int severity, long arrivedMinutesAgo) {
         this.id = required(id, "ID"); this.name = required(name, "Name");
         this.condition = required(condition, "Condition");
         if (severity < 1 || severity > 5) throw new IllegalArgumentException("Triage must be 1–5.");
+        if (arrivedMinutesAgo < 0 || arrivedMinutesAgo > 10080) throw new IllegalArgumentException("Arrival offset must be 0–10080 minutes.");
+        this.arrivedMinutesAgo = arrivedMinutesAgo;
         this.severity = severity;
     }
     private static String required(String s, String field) {
         if (s == null || s.isBlank()) throw new IllegalArgumentException(field + " is required.");
         return s.trim();
     }
+    long getArrivedMinutesAgo() { return arrivedMinutesAgo; }
     public String getId() { return id; }
     public String getName() { return name; }
     public String getCondition() { return condition; }

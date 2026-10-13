@@ -8,7 +8,7 @@ In Cursor, choose Terminal → New Terminal. From this project folder, run:
 
 Every launch starts with zero patients and ten empty rooms. There is no demo button.
 Click **Import patients**, select **patients/assignment-patients.csv**, and open it.
-Expected: registered 12, waiting 12, occupied 0, available 10.
+Expected: registered 12, waiting 12, occupied 0, available 10. Arrivals are staggered from 82 to 4 minutes before import, so live waits immediately show a realistic patient history. These are fictional historical times supplied by the CSV.
 Import appends rather than replacing patients: restart before repeating the presentation.
 
 ## The exact sequence
@@ -29,7 +29,7 @@ For each admission, select the indicated ID in the waiting table, click **Admit 
 ## Explain the code briefly
 
 - Patient.java stores ID, name, condition, triage, and arrival/admission/discharge times.
-- PatientComparator.java compares severity first and arrival sequence second. Explain FIFO within equal severity.
+- PatientComparator.java compares severity first, arrival time second, then arrival sequence for exact ties. Explain FIFO within equal severity.
 - EmergencyDepartment.java contains PriorityQueue for waiting, HashMap for ID lookup, ten Room objects, and Stack for discharge history.
 - In admitPatient, show that validation happens before moving the patient. New patients can also be admitted directly using the professor's three-argument constructor; unspecified triage defaults to urgent (3).
 - EmergencyDepartmentGUI.java connects buttons to those operations and refreshes durations every second.

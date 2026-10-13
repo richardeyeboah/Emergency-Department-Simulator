@@ -28,7 +28,11 @@ public final class EmergencyDepartment {
             if (p == null || p.getArrivalTime() != null) throw new IllegalArgumentException("Import requires new patients.");
             if (!ids.add(p.getId())) throw new IllegalArgumentException("Duplicate ID: " + p.getId());
         }
-        for (Patient p : batch) registerPatient(p);
+        LocalDateTime importedAt = now();
+        for (Patient p : batch) {
+            p.register(sequence++, importedAt.minusMinutes(p.getArrivedMinutesAgo()));
+            patients.put(p.getId(), p); waitingQueue.add(p);
+        }
     }
     public synchronized Patient peekNextPatient() { return waitingQueue.peek(); }
     /** Get/call next admits to a free room, so no patient can disappear between queue and room. */
