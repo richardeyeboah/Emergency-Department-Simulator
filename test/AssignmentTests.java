@@ -38,6 +38,14 @@ public final class AssignmentTests {
         check(timed.searchPatient("OLDER").waitingDuration(timed.now()).toMinutes()==90);
         rejected(()->new Patient("BAD","Bad","Condition",1,-1));
         System.out.println("PASS: historical arrival offsets, chronological FIFO across imports, and frozen wait");
+        ed.reset();
+        check(ed.totalPatients()==0 && ed.waitingCount()==0 && ed.occupiedCount()==0 && ed.availableCount()==10);
+        check(ed.dischargeHistory().isEmpty() && ed.peekNextPatient()==null && ed.searchPatient("P006")==null);
+        ed.importPatients(PatientImporter.read(Path.of("patients/assignment-patients.csv")));
+        check(ed.totalPatients()==12 && ed.waitingCount()==12 && ed.searchPatient("P001").getArrivalSequence()==0);
+        ed.admitPatient(10,ed.searchPatient("P006"));
+        check(ed.occupiedCount()==1);
+        System.out.println("PASS: reset clears all state and supports reimport and admission");
     }
     private static void statuses(EmergencyDepartment ed) {
         for(Room room:ed.rooms()) System.out.println("Room "+room.getNumber()+": "+(room.isOccupied()?room.getPatient():"Available"));

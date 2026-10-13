@@ -9,7 +9,7 @@ In Cursor, choose Terminal → New Terminal. From this project folder, run:
 Every launch starts with zero patients and ten empty rooms. There is no demo button.
 Click **Import patients**, select **patients/assignment-patients.csv**, and open it.
 Expected: registered 12, waiting 12, occupied 0, available 10. Arrivals are staggered from 82 to 4 minutes before import, so live waits immediately show a realistic patient history. These are fictional historical times supplied by the CSV.
-Import appends rather than replacing patients: restart before repeating the presentation.
+Import appends rather than replacing patients. To repeat the presentation, click **Reset everything**, confirm, then import the file again. No restart is needed.
 
 ## The exact sequence
 

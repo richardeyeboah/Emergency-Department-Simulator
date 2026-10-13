@@ -40,6 +40,16 @@ public final class EmergencyDepartmentGUI extends JFrame {
         actions.add(button("Peek next", () -> { Patient p = ed.peekNextPatient(); if(p == null) return "Waiting queue is empty."; showPatient(p); return "Next: " + p; }));
         actions.add(button("Call / get next → admit", () -> { Patient p = ed.getNextPatient(); return p == null ? "Waiting queue is empty." : "Admitted: " + p; }));
         actions.add(button("Admit selected", () -> { Patient p = selected(); String value = JOptionPane.showInputDialog(this,"Room number (1–10)"); if(value == null) return "Admission cancelled."; ed.admitPatient(Integer.parseInt(value.trim()),p); return "Admitted to room " + value; }));
+        actions.add(button("Reset everything", () -> {
+            if (ed.totalPatients() > 0 && JOptionPane.showConfirmDialog(this,
+                    "Clear all patients, room assignments, and discharge history?",
+                    "Reset everything", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION)
+                return "Reset cancelled.";
+            ed.reset(); queue.clearSelection(); history.clearSelection();
+            id.setText(""); name.setText(""); condition.setText(""); triage.setSelectedIndex(0);
+            tabs.setSelectedIndex(0);
+            return "Everything reset. Import patients to begin again.";
+        }));
         JPanel waiting = new JPanel(new BorderLayout()); waiting.add(actions,BorderLayout.NORTH); waiting.add(tabs); flow.add(waiting);
         JPanel rooms = new JPanel(new GridLayout(2,5,8,8)); rooms.setPreferredSize(new Dimension(800,195)); rooms.setBorder(BorderFactory.createTitledBorder("10 treatment rooms · click an occupied room to discharge"));
         for(int i=0;i<10;i++) { final int number=i+1; roomButtons[i]=button("",()-> { Room room=ed.rooms().get(number-1); if(!room.isOccupied()) return "Room "+number+" is available."; if(JOptionPane.showConfirmDialog(this,"Discharge "+room.getPatient().getName()+"?","Discharge",JOptionPane.YES_NO_OPTION)!=JOptionPane.YES_OPTION) return "Discharge cancelled."; Patient p=ed.dischargePatient(number); return "Discharged: "+p; }); roomButtons[i].setUI(new javax.swing.plaf.basic.BasicButtonUI()); roomButtons[i].setOpaque(true); rooms.add(roomButtons[i]); }

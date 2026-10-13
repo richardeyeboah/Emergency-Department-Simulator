@@ -72,6 +72,12 @@ public final class EmergencyDepartment {
     public synchronized List<Patient> dischargeHistory() {
         ArrayList<Patient> result = new ArrayList<>(dischargeHistory); Collections.reverse(result); return List.copyOf(result);
     }
+    /** Start a fresh session; old patient objects are no longer part of this department. */
+    public synchronized void reset() {
+        waitingQueue.clear(); patients.clear(); dischargeHistory.clear();
+        for (Room room : rooms) room.release();
+        sequence = 0;
+    }
     public synchronized int totalPatients() { return patients.size(); }
     public synchronized int waitingCount() { return waitingQueue.size(); }
     public synchronized int occupiedCount() { return (int) Arrays.stream(rooms).filter(Room::isOccupied).count(); }

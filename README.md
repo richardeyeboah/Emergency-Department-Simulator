@@ -12,6 +12,8 @@ Every launch starts empty. Click **Import patients** and choose **patients/assig
 
 CSV format: id,name,condition,severity with optional arrived_minutes_ago. The presentation file has staggered historical arrivals (82 to 4 minutes before import), recalculated every time you import. Ordinary four-column files use the current arrival time. Quoted fields and escaped quotes are supported; multiline fields are not. Severity must be 1–5.
 
+To repeat the presentation, click **Reset everything**, confirm, then import the patient file again. This clears the queue, rooms, history, form, and arrival sequence.
+
 To close, click the red window button or press Ctrl+C in the terminal that launched it. Run the same command to start fresh. Data is held in memory only.
 
 Manual compilation on other systems:
