@@ -24,6 +24,7 @@ Manual compilation on other systems:
 
 ## Controls
 
+- Test null admission: attempts admission with Java null and displays the validation error without changing state.
 - Register patient: records arrival and adds a uniquely identified patient.
 - Peek next: shows the next patient without removing them.
 - Call / get next → admit: admits the highest-priority waiting patient into the first free room. Full capacity leaves the queue unchanged.
@@ -55,6 +56,6 @@ The runner executes twelve general tests, followed by all ten supplied assignmen
 
 See [PRESENTATION.md](PRESENTATION.md) for the on-screen tests 1–10, expected counts, short spoken explanations, and code walkthrough. The sample fixture defines room assignments because the supplied handout excerpts do not specify every initial patient/room.
 
-For the video, record using macOS Shift–Command–5. Aim for 5–7 minutes: introduce Java/Swing, import patients, demonstrate the ten tests, then explain the data structures and show passing tests. Null admission is demonstrated in code/tests because a GUI selection cannot represent Java null.
+For the video, record using macOS Shift–Command–5. Aim for 5–7 minutes: introduce Java/Swing, import patients, demonstrate the ten tests, then explain the data structures and show passing tests. Null admission can be demonstrated directly using the Test null admission button.
 
 Discharge is a manual simulation of doctor advice; the application does not determine who is cured. No database or persistence is included.

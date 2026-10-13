@@ -40,6 +40,12 @@ public final class EmergencyDepartmentGUI extends JFrame {
         actions.add(button("Peek next", () -> { Patient p = ed.peekNextPatient(); if(p == null) return "Waiting queue is empty."; showPatient(p); return "Next: " + p; }));
         actions.add(button("Call / get next → admit", () -> { Patient p = ed.getNextPatient(); return p == null ? "Waiting queue is empty." : "Admitted: " + p; }));
         actions.add(button("Admit selected", () -> { Patient p = selected(); String value = JOptionPane.showInputDialog(this,"Room number (1–10)"); if(value == null) return "Admission cancelled."; ed.admitPatient(Integer.parseInt(value.trim()),p); return "Admitted to room " + value; }));
+        actions.add(button("Test null admission", () -> {
+            int roomNumber = ed.rooms().stream().filter(room -> !room.isOccupied())
+                    .mapToInt(Room::getNumber).findFirst().orElse(1);
+            ed.admitPatient(roomNumber, null);
+            return "Null admission unexpectedly succeeded.";
+        }));
         actions.add(button("Reset everything", () -> {
             if (ed.totalPatients() > 0 && JOptionPane.showConfirmDialog(this,
                     "Clear all patients, room assignments, and discharge history?",
