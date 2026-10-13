@@ -55,8 +55,8 @@ Run:
 
 The runner executes twelve general tests, followed by all ten supplied assignment scenarios and additional direct-admission/import rollback checks. Failures exit unsuccessfully.
 
-See [PRESENTATION.md](PRESENTATION.md) for the on-screen tests 1–10, expected counts, short spoken explanations, and code walkthrough. The sample fixture defines room assignments because the supplied handout excerpts do not specify every initial patient/room.
+See [the recording script](docs/RECORDING-SCRIPT.md) for the project structure, on-screen tests 1–10, expected counts, detailed spoken explanations, and code walkthrough. The sample fixture defines room assignments because the supplied handout excerpts do not specify every initial patient/room.
 
-For the video, record using macOS Shift–Command–5. Aim for 5–7 minutes: introduce Java/Swing, import patients, demonstrate the ten tests, then explain the data structures and show passing tests. Null admission can be demonstrated directly using the Test null admission button.
+For the video, record using macOS Shift–Command–5. The full detailed script takes roughly 30–40 minutes with demonstrations; shorten it if the teacher specifies a time limit. Null admission can be demonstrated directly using the Test null admission button.
 
 Discharge is a manual simulation of doctor advice; the application does not determine who is cured. No database or persistence is included.
